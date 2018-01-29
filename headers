@@ -1,0 +1,21 @@
+#! /bin/bash
+# Description: It's similar with "ifdef ... #endif" in C programing language,
+# we don't want to include same file many times.
+# Author: Osier Yang <jyang@example.com>
+# Maintainer: Alex Jia <ajia@example.com>
+# Update: Jan 29, 2018
+
+
+__HEADERS__=1
+
+[ -z "${__DEMO_LIB__}" ] && source lib/demo.sh
+[ -z "${__COMMON_LIB__}" ] && source lib/common.sh
+[ -z "${__UTILS_LOG__}" ] && source utils/log.sh
+[ -z "${__UTILS_HASH__}" ] && source utils/hash.sh
+
+XML_TEMPLATE_DIR="./xml-templates"
+
+LOG_DIR="./logs"
+UTILS_DIR="./utils"
+
+# __HEADERS__

@@ -1,0 +1,12 @@
+summary="This is a third demo test ..."
+
+__VAR__Emily="etcd"
+__VAR__Osier="k8s"
+__VAR__Alex="docker"
+
+demo_one \
+        Emily="$__VAR__Emily"
+
+demo_two \
+        Osier="$__VAR__Osier" \
+	Alex="$__VAR__Alex"

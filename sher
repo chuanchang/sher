@@ -1,0 +1,96 @@
+#! /bin/bash
+# Description: The entrance of running test cases.
+# Author: Osier Yang <jyang@example.com>
+# Maintainer: Alex Jia <ajia@example.com>
+# Update: Jan 29, 2018
+
+
+[ -z "${__UTILS_COMMON__}" ] && source utils/common.sh
+[ -z "${__UTILS_LOG__}" ] && source utils/log.sh
+[ -z "${__HEADERS__}" ] && source ./headers
+[ -z "${__UTILS_CASER__}" ] && source utils/caser.sh
+
+VERSION="0.1"
+JOBS=
+CASE=
+RC=0
+usage() {
+    echo "Usage: $(basename $0) OPTION... [CASE1] [CASE2] ... [CASEn]"
+    echo "  -h, --help       print help information."
+    echo "  -v, --version    print version information"
+    exit 1
+}
+
+get_opts() {
+    [[ $# -lt 1 ]] && usage
+
+    TEMP=$(getopt -o j:hv --long jobs:,help,version \
+        -n 'sher' -- "$@")
+
+    if [ $? -ne 0 ]; then
+        usage
+        exit 1
+    fi
+
+    eval set -- "$TEMP"
+
+    while true; do
+        case "$1" in
+            -j|--jobs)
+                JOBS=$2
+                if [[ ! $JOBS =~ ^([0-9]+) ]]; then
+                    echo "Please enter an integer for number of jobs: $JOBS"
+                    exit 1
+                fi
+                shift 2
+                ;;
+            -h|--help)
+                usage
+                ;;
+            -v|--version)
+                echo "sher $VERSION"
+                break
+                ;;
+            --)
+                shift;
+                CASE="$@"
+                break
+                ;;
+            *)
+                echo "unknown parameter: $1"
+                usage
+                ;;
+        esac
+    done
+}
+
+# Execute all the cases specfied in command line.
+_test() {
+    [[ $# -lt 1 ]] && die "Usage: _test <case1> <case2> ... <casen>"
+
+    if [ ! -d $LOG_DIR ]; then
+        mkdir $LOG_DIR
+    fi
+
+    for i in $@; do
+        case=$i
+
+        if [ ! -f $case ]; then
+            echo "Warning: $case doesn't exist"
+            continue
+        fi
+
+        case=$(reprocess_case "./headers" $case)
+        sh $case
+        ret=$?
+        let "RC=${RC}+${ret}"
+        echo $case
+#	#rm -f $case
+    done
+}
+
+get_opts $@
+
+_test "$CASE"
+
+exit ${RC}

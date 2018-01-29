@@ -1,0 +1,6 @@
+summary="This is a first demo test ..."
+
+__VAR__Emily="etcd"
+
+demo_one \
+	Emily="$__VAR__Emily"

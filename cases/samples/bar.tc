@@ -1,0 +1,9 @@
+summary="This is a second demo test ..."
+
+__VAR__Osier="k8s"
+__VAR__Alex="docker"
+
+
+demo_two \
+        Osier="$__VAR__Osier" \
+	Alex="$__VAR__Alex"
